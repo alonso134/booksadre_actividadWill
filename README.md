@@ -7,6 +7,7 @@ Booksadre
 
 
 Descripción del proyecto: 
+
 Es una tienda en linea dedicada a fomentar el aprendizaje y la creatividad de todas las edades. Nuestra tienda en linea ofrece una amplia seleciòn de utiles, desde utiles hasta libros educativos, para inspirar el descubrimiento y el desarrollo personal.
 
 
