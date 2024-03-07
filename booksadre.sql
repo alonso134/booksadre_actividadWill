@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-03-2024 a las 02:50:38
+-- Tiempo de generación: 07-03-2024 a las 05:29:57
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -40,7 +40,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarCliente` (IN `p_id_cliente`
   VALUES (p_id_cliente, p_nombre_cliente, p_apellido_cliente, p_genero_cliente, p_correo_cliente, p_telefono_cliente, p_fecha_nacimiento, p_pais_cliente, p_clave_cliente, p_estado_cliente, p_fecha_registro);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarDetallePedido` (IN `p_id_detalle` INT, IN `p_id_pedido` INT, IN `p_id_producto` INT, IN `p_cantidad_producto` INT, IN `p_precio_producto` DECIMAL(5,2), IN `p_subtotal` DECIMAL(5,2))   BEGIN
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarDetallePedido` (IN `p_id_detalle` INT, IN `p_id_pedido` INT, IN `p_id_producto` INT, IN `p_cantidad_producto` INT, IN `p_precio_producto` DECIMAL(10,2), IN `p_subtotal` DECIMAL(10,2))   BEGIN
   INSERT INTO detalle_pedido (id_detalle, id_pedido, id_producto, cantidad_producto, precio_producto, subtotal)
   VALUES (p_id_detalle, p_id_pedido, p_id_producto, p_cantidad_producto, p_precio_producto, p_subtotal);
 END$$
@@ -50,9 +50,9 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarPedido` (IN `p_id_pedido` I
   VALUES (p_id_pedido, p_id_cliente, p_estado_pedido, p_fecha_registro, p_direccion_pedido);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarProducto` (IN `p_id_producto` INT, IN `p_id_categoria` INT, IN `p_nombre_producto` VARCHAR(50), IN `p_descripcion_producto` VARCHAR(250), IN `p_precio_producto` DECIMAL(5,2), IN `p_imagen_producto` VARCHAR(25), IN `p_estado_producto` TINYINT, IN `p_id_administrador` INT, IN `p_existencias_producto` INT, IN `p_fecha_registro` DATE)   BEGIN
-  INSERT INTO producto (id_producto, id_categoria, nombre_producto, descripcion_producto, precio_producto, imagen_producto, estado_producto, id_administrador, existencias_producto, fecha_registro)
-  VALUES (p_id_producto, p_id_categoria, p_nombre_producto, p_descripcion_producto, p_precio_producto, p_imagen_producto, p_estado_producto, p_id_administrador, p_existencias_producto, p_fecha_registro);
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarProducto` (IN `p_id_producto` INT, IN `p_id_categoria` INT, IN `p_nombre_producto` VARCHAR(50), IN `p_descripcion_producto` VARCHAR(250), IN `p_precio_producto` DECIMAL(5,2), IN `p_imagen_producto` VARCHAR(25), IN `p_estado_producto` TINYINT, IN `p_id_administrador` INT, IN `p_existencias` INT, IN `p_fecha_registro` DATE)   BEGIN
+  INSERT INTO productos (id_producto, id_categoria, nombre_producto, descripcion_producto, precio_producto, imagen_producto, estado_producto, id_administrador, existencias, fecha_registro)
+  VALUES (p_id_producto, p_id_categoria, p_nombre_producto, p_descripcion_producto, p_precio_producto, p_imagen_producto, p_estado_producto, p_id_administrador, p_existencias, p_fecha_registro);
 END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertarResena` (IN `p_id_resena` INT, IN `p_id_detalle` INT, IN `p_calificacion_producto` INT, IN `p_comentario_producto` VARCHAR(250), IN `p_fecha_valoracion` DATE, IN `p_estado_comentario` TINYINT)   BEGIN
@@ -210,29 +210,62 @@ INSERT INTO `cliente` (`id_cliente`, `nombre_cliente`, `apellido_cliente`, `gene
 
 CREATE TABLE `detalle_pedido` (
   `id_detalle` int(11) NOT NULL,
-  `id_pedido` int(11) DEFAULT NULL,
-  `id_producto` int(11) DEFAULT NULL,
-  `cantidad_producto` int(11) DEFAULT NULL,
-  `precio_producto` decimal(10,2) DEFAULT NULL,
-  `subtotal` decimal(10,2) DEFAULT NULL
+  `id_producto` int(11) NOT NULL,
+  `id_pedido` int(11) NOT NULL,
+  `cantidad_producto` int(11) NOT NULL,
+  `precio_producto` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `detalle_pedido`
+--
+
+INSERT INTO `detalle_pedido` (`id_detalle`, `id_producto`, `id_pedido`, `cantidad_producto`, `precio_producto`, `subtotal`) VALUES
+(1, 1, 1, 2, 4.00, 8.00),
+(2, 2, 2, 2, 3.99, 7.98),
+(3, 3, 3, 2, 0.49, 7.98),
+(4, 4, 4, 2, 3.99, 7.98),
+(5, 5, 5, 2, 39.99, 7.98),
+(6, 6, 6, 2, 49.99, 7.98),
+(7, 7, 7, 2, 24.99, 7.98),
+(8, 8, 8, 2, 9.99, 7.98),
+(9, 9, 9, 2, 7.99, 7.98),
+(10, 10, 10, 2, 5.99, 7.98),
+(11, 11, 11, 2, 7.99, 7.98),
+(12, 12, 12, 2, 9.99, 7.98),
+(13, 13, 13, 2, 1.49, 7.98),
+(14, 14, 14, 2, 12.99, 7.98),
+(15, 15, 15, 2, 34.99, 7.98),
+(16, 16, 16, 2, 29.99, 7.98),
+(17, 17, 17, 2, 129.99, 7.98),
+(18, 18, 18, 2, 19.99, 7.98),
+(19, 19, 19, 2, 9.99, 7.98),
+(20, 20, 20, 2, 5.99, 7.98),
+(21, 21, 21, 2, 6.99, 7.98),
+(22, 22, 22, 2, 2.49, 7.98),
+(23, 23, 23, 2, 15.99, 7.98),
+(24, 24, 24, 2, 15.99, 7.98),
+(25, 2, 25, 2, 15.99, 7.98);
 
 --
 -- Disparadores `detalle_pedido`
 --
 DELIMITER $$
-CREATE TRIGGER `after_insert_pedido` AFTER INSERT ON `detalle_pedido` FOR EACH ROW BEGIN
-    DECLARE producto_existencias INT;
-
-    -- Obtener las existencias actuales del producto
-    SELECT existencias INTO producto_existencias
-    FROM productos
-    WHERE id_producto = NEW.id_producto;
-
+CREATE TRIGGER `after_insert_detalle_pedido` AFTER INSERT ON `detalle_pedido` FOR EACH ROW BEGIN
     -- Actualizar las existencias restando la cantidad comprada
     UPDATE productos
-    SET existencias_producto = existencias_producto - NEW.cantidad_producto
-    WHERE producto_id = NEW.id_producto;
+    SET existencias = existencias - NEW.cantidad_producto
+    WHERE id_producto = NEW.id_producto;
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `insert_detalle_pedido` AFTER INSERT ON `detalle_pedido` FOR EACH ROW BEGIN
+    -- Actualizar las existencias restando la cantidad comprada
+    UPDATE productos
+    SET existencias = existencias - NEW.cantidad_producto
+    WHERE id_producto = NEW.id_producto;
 END
 $$
 DELIMITER ;
@@ -297,7 +330,7 @@ CREATE TABLE `productos` (
   `imagen_producto` varchar(25) DEFAULT NULL,
   `estado_producto` tinyint(1) DEFAULT NULL,
   `id_administrador` int(11) DEFAULT NULL,
-  `existencias_producto` int(11) DEFAULT NULL,
+  `existencias` int(11) DEFAULT NULL,
   `fecha_registro` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -305,31 +338,31 @@ CREATE TABLE `productos` (
 -- Volcado de datos para la tabla `productos`
 --
 
-INSERT INTO `productos` (`id_producto`, `id_categoria`, `nombre_producto`, `descripcion_producto`, `precio_producto`, `imagen_producto`, `estado_producto`, `id_administrador`, `existencias_producto`, `fecha_registro`) VALUES
-(1, 1, 'Cuaderno espiral A4', 'Cuaderno de hojas blancas, tamaño A4', 4.99, 'cuaderno_espiral_a4.jpg', 1, 1, 100, '2024-01-01'),
-(2, 1, 'Cuaderno rayado A5', 'Cuaderno de hojas rayadas, tamaño A5', 3.99, 'cuaderno_rayado_a5.jpg', 1, 2, 150, '2024-01-02'),
-(3, 2, 'Lápiz HB', 'Lápiz con dureza HB para escritura general', 0.49, 'lapiz_hb.jpg', 1, 1, 500, '2024-02-01'),
-(4, 2, 'Lápices de colores (12 colores)', 'Caja de 12 lápices de colores', 3.99, 'lapices_colores_12.jpg', 1, 1, 200, '2024-02-02'),
-(5, 3, 'Mochila ejecutiva', 'Mochila elegante para uso ejecutivo', 39.99, 'mochila_ejecutiva.jpg', 1, 1, 60, '2024-03-03'),
-(6, 3, 'Mochila con ruedas', 'Mochila con sistema de ruedas para fácil transporte', 49.99, 'mochila_ruedas.jpg', 1, 1, 40, '2024-03-04'),
-(7, 4, 'Calculadora científica Casio FX-991EX', 'Calculadora científica avanzada', 24.99, 'calculadora_cientifica_ca', 1, 1, 50, '2024-04-01'),
-(8, 4, 'Calculadora básica', 'Calculadora simple para tareas cotidianas', 9.99, 'calculadora_basica.jpg', 1, 1, 100, '2024-04-02'),
-(9, 5, 'Estuche con compartimentos', 'Estuche para organizar lápices y bolígrafos', 7.99, 'estuche_compartimentos.jp', 1, 1, 150, '2024-05-01'),
-(10, 5, 'Estuche de tela', 'Estuche ligero y fácil de llevar', 5.99, 'estuche_tela.jpg', 1, 1, 200, '2024-05-02'),
-(11, 1, 'Cuaderno de espiral con tapa dura', 'Cuaderno de espiral con tapa dura, ideal para tomar apuntes', 7.99, 'cuaderno_espiral_tapa_dur', 1, 1, 80, '2024-01-03'),
-(12, 1, 'Cuaderno de dibujo artístico', 'Cuaderno con papel de calidad para dibujar y crear arte', 9.99, 'cuaderno_dibujo_artistico', 1, 1, 60, '2024-01-04'),
-(13, 2, 'Lápiz mecánico 0.7mm', 'Lápiz mecánico con punta de 0.7mm para escritura precisa', 1.49, 'lapiz_mecanico_07mm.jpg', 1, 1, 200, '2024-02-03'),
-(14, 2, 'Lápices de colores profesionales (24 colores)', 'Caja de 24 lápices de colores de alta calidad', 12.99, 'lapices_colores_profesion', 1, 1, 120, '2024-02-04'),
-(15, 3, 'Mochila resistente al agua', 'Mochila con material resistente al agua para días lluviosos', 34.99, 'mochila_resistente_agua.j', 1, 1, 70, '2024-03-05'),
-(16, 3, 'Mochila para portátil', 'Mochila con compartimento acolchado para portátil', 29.99, 'mochila_portatil.jpg', 1, 1, 90, '2024-03-06'),
-(17, 4, 'Calculadora programable HP Prime', 'Calculadora programable para estudiantes avanzados', 129.99, 'calculadora_programable_h', 1, 1, 30, '2024-04-05'),
-(18, 4, 'Calculadora científica Casio FX-115ES Plus', 'Calculadora científica con funciones avanzadas', 19.99, 'calculadora_cientifica_ca', 1, 1, 80, '2024-04-06'),
-(19, 5, 'Estuche doble compartimento', 'Estuche con dos compartimentos para mayor organización', 9.99, 'estuche_doble_compartimen', 1, 1, 100, '2024-05-05'),
-(20, 5, 'Estuche de silicona', 'Estuche flexible de silicona para lápices y bolígrafos', 5.99, 'estuche_silicona.jpg', 1, 1, 150, '2024-05-06'),
-(21, 1, 'Cuaderno de espiral con tapa blanda', 'Cuaderno de espiral con tapa blanda y hojas rayadas', 5.99, 'cuaderno_espiral_tapa_bla', 1, 1, 120, '2024-01-05'),
-(22, 1, 'Cuaderno de composición', 'Cuaderno de composición con hojas cuadriculadas', 6.99, 'cuaderno_composicion.jpg', 1, 1, 80, '2024-01-06'),
-(23, 2, 'Lápiz de carpintero', 'Lápiz de carpintero hexagonal con punta resistente', 2.49, 'lapiz_carpintero.jpg', 1, 1, 150, '2024-02-05'),
-(24, 2, 'Lápices de colores acuarelables', 'Caja de 24 lápices acuarelables para arte y dibujo', 15.99, 'lapices_colores_acuarelab', 1, 1, 100, '2024-02-06'),
+INSERT INTO `productos` (`id_producto`, `id_categoria`, `nombre_producto`, `descripcion_producto`, `precio_producto`, `imagen_producto`, `estado_producto`, `id_administrador`, `existencias`, `fecha_registro`) VALUES
+(1, 1, 'Cuaderno espiral A4', 'Cuaderno de hojas blancas, tamaño A4', 4.00, 'cuaderno_espiral_a4.jpg', 1, 1, 96, '2024-01-01'),
+(2, 1, 'Cuaderno rayado A5', 'Cuaderno de hojas rayadas, tamaño A5', 3.99, 'cuaderno_rayado_a5.jpg', 1, 2, 142, '2024-01-02'),
+(3, 2, 'Lápiz HB', 'Lápiz con dureza HB para escritura general', 0.49, 'lapiz_hb.jpg', 1, 1, 496, '2024-02-01'),
+(4, 2, 'Lápices de colores (12 colores)', 'Caja de 12 lápices de colores', 3.99, 'lapices_colores_12.jpg', 1, 1, 196, '2024-02-02'),
+(5, 3, 'Mochila ejecutiva', 'Mochila elegante para uso ejecutivo', 39.99, 'mochila_ejecutiva.jpg', 1, 1, 56, '2024-03-03'),
+(6, 3, 'Mochila con ruedas', 'Mochila con sistema de ruedas para fácil transporte', 49.99, 'mochila_ruedas.jpg', 1, 1, 36, '2024-03-04'),
+(7, 4, 'Calculadora científica Casio FX-991EX', 'Calculadora científica avanzada', 24.99, 'calculadora_cientifica_ca', 1, 1, 46, '2024-04-01'),
+(8, 4, 'Calculadora básica', 'Calculadora simple para tareas cotidianas', 9.99, 'calculadora_basica.jpg', 1, 1, 94, '2024-04-02'),
+(9, 5, 'Estuche con compartimentos', 'Estuche para organizar lápices y bolígrafos', 7.99, 'estuche_compartimentos.jp', 1, 1, 146, '2024-05-01'),
+(10, 5, 'Estuche de tela', 'Estuche ligero y fácil de llevar', 5.99, 'estuche_tela.jpg', 1, 1, 196, '2024-05-02'),
+(11, 1, 'Cuaderno de espiral con tapa dura', 'Cuaderno de espiral con tapa dura, ideal para tomar apuntes', 7.99, 'cuaderno_espiral_tapa_dur', 1, 1, 76, '2024-01-03'),
+(12, 1, 'Cuaderno de dibujo artístico', 'Cuaderno con papel de calidad para dibujar y crear arte', 9.99, 'cuaderno_dibujo_artistico', 1, 1, 56, '2024-01-04'),
+(13, 2, 'Lápiz mecánico 0.7mm', 'Lápiz mecánico con punta de 0.7mm para escritura precisa', 1.49, 'lapiz_mecanico_07mm.jpg', 1, 1, 196, '2024-02-03'),
+(14, 2, 'Lápices de colores profesionales (24 colores)', 'Caja de 24 lápices de colores de alta calidad', 12.99, 'lapices_colores_profesion', 1, 1, 116, '2024-02-04'),
+(15, 3, 'Mochila resistente al agua', 'Mochila con material resistente al agua para días lluviosos', 34.99, 'mochila_resistente_agua.j', 1, 1, 66, '2024-03-05'),
+(16, 3, 'Mochila para portátil', 'Mochila con compartimento acolchado para portátil', 29.99, 'mochila_portatil.jpg', 1, 1, 86, '2024-03-06'),
+(17, 4, 'Calculadora programable HP Prime', 'Calculadora programable para estudiantes avanzados', 129.99, 'calculadora_programable_h', 1, 1, 26, '2024-04-05'),
+(18, 4, 'Calculadora científica Casio FX-115ES Plus', 'Calculadora científica con funciones avanzadas', 19.99, 'calculadora_cientifica_ca', 1, 1, 76, '2024-04-06'),
+(19, 5, 'Estuche doble compartimento', 'Estuche con dos compartimentos para mayor organización', 9.99, 'estuche_doble_compartimen', 1, 1, 96, '2024-05-05'),
+(20, 5, 'Estuche de silicona', 'Estuche flexible de silicona para lápices y bolígrafos', 5.99, 'estuche_silicona.jpg', 1, 1, 146, '2024-05-06'),
+(21, 1, 'Cuaderno de espiral con tapa blanda', 'Cuaderno de espiral con tapa blanda y hojas rayadas', 5.99, 'cuaderno_espiral_tapa_bla', 1, 1, 116, '2024-01-05'),
+(22, 1, 'Cuaderno de composición', 'Cuaderno de composición con hojas cuadriculadas', 6.99, 'cuaderno_composicion.jpg', 1, 1, 76, '2024-01-06'),
+(23, 2, 'Lápiz de carpintero', 'Lápiz de carpintero hexagonal con punta resistente', 2.49, 'lapiz_carpintero.jpg', 1, 1, 146, '2024-02-05'),
+(24, 2, 'Lápices de colores acuarelables', 'Caja de 24 lápices acuarelables para arte y dibujo', 15.99, 'lapices_colores_acuarelab', 1, 1, 96, '2024-02-06'),
 (25, 3, 'Mochila con USB', 'Mochila con puerto USB para cargar dispositivos electrónicos', 39.99, 'mochila_usb.jpg', 1, 1, 90, '2024-03-08');
 
 -- --------------------------------------------------------
@@ -346,6 +379,37 @@ CREATE TABLE `reseña` (
   `fecha_valoracion` date NOT NULL,
   `estado_comentario` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `reseña`
+--
+
+INSERT INTO `reseña` (`id_resena`, `id_detalle`, `calificacion_producto`, `comentario_producto`, `fecha_valoracion`, `estado_comentario`) VALUES
+(1, 1, 5, 'Increíble calidad del producto', '2024-02-14', 1),
+(2, 2, 5, '¡Excelente producto!', '2024-01-02', 1),
+(3, 3, 4, 'Buen servicio de entrega', '2024-02-05', 1),
+(4, 4, 2, 'No estoy satisfecho con el producto', '2024-01-15', 1),
+(5, 5, 5, 'Muy contento con mi compra', '2024-02-20', 1),
+(6, 6, 3, 'Producto recibido en mal estado', '2024-02-25', 1),
+(7, 7, 4, 'Buena relación calidad-precio', '2024-03-01', 1),
+(8, 8, 1, 'No volveré a comprar aquí', '2024-01-10', 1),
+(9, 9, 5, 'Increíble servicio al cliente', '2024-01-18', 1),
+(10, 10, 4, 'Entrega rápida', '2024-02-28', 1),
+(11, 11, 2, 'Producto defectuoso', '2024-03-05', 1),
+(12, 12, 3, 'Podría mejorar la calidad', '2024-03-10', 1),
+(13, 13, 4, 'Buena atención al cliente', '2024-02-15', 1),
+(14, 14, 3, 'Envío demorado', '2024-03-02', 1),
+(15, 15, 5, 'Me encanta este producto', '2024-01-28', 1),
+(16, 16, 2, 'Calidad mediocre', '2024-02-10', 1),
+(17, 17, 4, 'Producto recibido según lo esperado', '2024-03-08', 1),
+(18, 18, 3, 'Precio elevado para la calidad', '2024-01-05', 1),
+(19, 19, 5, 'Recomendaría este producto', '2024-02-18', 1),
+(20, 20, 2, 'No cumplió con mis expectativas', '2024-02-22', 1),
+(21, 21, 4, 'Buena variedad de productos', '2024-03-03', 1),
+(22, 22, 3, 'Problemas con el embalaje', '2024-01-12', 1),
+(23, 23, 5, 'Muy satisfecho con la compra', '2024-02-08', 1),
+(24, 24, 3, 'Podría mejorar el servicio postventa', '2024-01-22', 1),
+(25, 25, 5, 'Increíble calidad del producto', '2024-02-14', 1);
 
 --
 -- Índices para tablas volcadas
@@ -374,8 +438,8 @@ ALTER TABLE `cliente`
 --
 ALTER TABLE `detalle_pedido`
   ADD PRIMARY KEY (`id_detalle`),
-  ADD KEY `id_pedido` (`id_pedido`),
-  ADD KEY `id_producto` (`id_producto`) USING BTREE;
+  ADD KEY `id_pedido` (`id_producto`),
+  ADD KEY `id_producto` (`id_pedido`) USING BTREE;
 
 --
 -- Indices de la tabla `pedido`
@@ -407,8 +471,8 @@ ALTER TABLE `reseña`
 -- Filtros para la tabla `detalle_pedido`
 --
 ALTER TABLE `detalle_pedido`
-  ADD CONSTRAINT `detalle_pedido_ibfk_1` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id_pedido`),
-  ADD CONSTRAINT `detalle_pedido_ibfk_2` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`);
+  ADD CONSTRAINT `detalle_pedido_ibfk_1` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`),
+  ADD CONSTRAINT `detalle_pedido_ibfk_2` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id_pedido`);
 
 --
 -- Filtros para la tabla `pedido`
